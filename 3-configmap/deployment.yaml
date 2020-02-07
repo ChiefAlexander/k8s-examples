@@ -1,0 +1,44 @@
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-configmap
+  namespace: configmap
+  labels:
+    app: nginx
+    type: configmap
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+      type: configmap
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        type: configmap
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            limits:
+              cpu: 10m
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          envFrom:
+            - configMapRef:
+                name: nginx-configmap-env
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/important/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: nginx-configmap-file

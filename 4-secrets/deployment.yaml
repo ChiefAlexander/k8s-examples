@@ -1,0 +1,44 @@
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-secrets
+  namespace: secrets
+  labels:
+    app: nginx
+    type: secrets
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+      type: secrets
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        type: secrets
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            limits:
+              cpu: 10m
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          envFrom:
+            - secretRef:
+                name: nginx-secret-env
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/important/config
+      volumes:
+        - name: config-volume
+          secret:
+            secretName: nginx-secret-file

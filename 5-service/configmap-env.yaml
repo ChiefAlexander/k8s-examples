@@ -1,0 +1,12 @@
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configmap-env
+  namespace: service
+  labels:
+    app: nginx
+    type: service
+data:
+  hey: whats going on?
+  important: environment var
