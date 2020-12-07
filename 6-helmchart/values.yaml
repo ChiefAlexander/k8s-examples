@@ -1,14 +1,43 @@
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nginx-configmap-file
-  namespace: configmap
-  labels:
-    app.kubernetes.io/name: nginx
-    app.kubernetes.io/instance: configmap
-data:
-  tragedy.txt: |-
+# Default values for example.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+resources:
+  limits:
+    cpu: 10m
+    memory: 64Mi
+  requests:
+    cpu: 10m
+    memory: 64Mi
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+
+service:
+  type: ClusterIP
+  port: 80
+
+envConfig:
+  hey: whats going on?
+  important: environment var
+
+secretFiles:
+  tragedy.txt: |
     Did you ever hear the tragedy of Darth Plagueis The Wise?
     I thought not.
     It’s not a story the Jedi would tell you.

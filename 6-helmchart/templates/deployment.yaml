@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "6-helmchart.fullname" . }}
+  labels: {{ include "6-helmchart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{ include "6-helmchart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{ include "6-helmchart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+          resources: {{ toYaml .Values.resources | nindent 12 }}
+          livenessProbe: {{ toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe: {{ toYaml .Values.readinessProbe | nindent 12 }}
+        {{- if .Values.envConfig }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "6-helmchart.fullname" . }}-env
+        {{- end }}
+        {{- if .Values.secretFiles }}
+          volumeMounts:
+            - name: secret-volume
+              mountPath: /etc/important/secret
+        {{- end }}
+    {{- if .Values.secretFiles }}
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: {{ include "6-helmchart.fullname" . }}-file
+    {{- end }}

@@ -10,4 +10,5 @@ spec:
   containers:
     - name: alpine
       image: alpine:latest
+      imagePullPolicy: Always
       command: ["sh", "-c", "apk add curl && sleep 3600"]

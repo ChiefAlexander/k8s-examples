@@ -5,23 +5,24 @@ metadata:
   name: nginx-service
   namespace: service
   labels:
-    app: nginx
-    type: service
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/instance: service
 spec:
   selector:
     matchLabels:
-      app: nginx
-      type: service
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: service
   replicas: 2
   template:
     metadata:
       labels:
-        app: nginx
-        type: service
+        app.kubernetes.io/name: nginx
+        app.kubernetes.io/instance: service
     spec:
       containers:
         - name: nginx
           image: nginx:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
               name: http
@@ -32,6 +33,14 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           envFrom:
             - configMapRef:
                 name: nginx-configmap-env
