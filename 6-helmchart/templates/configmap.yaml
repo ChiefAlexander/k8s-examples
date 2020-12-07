@@ -1,0 +1,9 @@
+{{- if .Values.envConfig }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "6-helmchart.fullname" . }}-env
+  labels: {{ include "6-helmchart.labels" . | nindent 4 }}
+data:
+  {{- toYaml .Values.envConfig | nindent 2 }}
+{{- end }}

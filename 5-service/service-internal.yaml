@@ -5,13 +5,13 @@ metadata:
   name: nginx-service-internal
   namespace: service
   labels:
-    app: nginx
-    type: service
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/instance: service
 spec:
   type: ClusterIP
   selector:
-    app: nginx
-    type: service
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/instance: service
   ports:
     - protocol: TCP
       port: 80

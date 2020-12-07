@@ -5,8 +5,8 @@ metadata:
   name: nginx-configmap-env
   namespace: configmap
   labels:
-    app: nginx
-    type: configmap
+    app.kubernetes.io/name: nginx
+    app.kubernetes.io/instance: configmap
 data:
   hey: whats going on?
   important: environment var

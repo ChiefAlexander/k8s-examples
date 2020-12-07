@@ -22,6 +22,7 @@ spec:
       containers:
         - name: nginx
           image: nginx:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
               name: http
@@ -32,3 +33,11 @@ spec:
             requests:
               cpu: 10m
               memory: 64Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
